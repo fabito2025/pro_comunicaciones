@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">Listado de Servicios (Abiertos / Cerrados)</h3>
+
+    <!-- Filtros -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label for="numero_punto" class="form-label">Número de Punto</label>
+            <input type="text" name="numero_punto" id="numero_punto" class="form-control"
+                   value="{{ request.GET.numero_punto }}">
+        </div>
+        <div class="col-md-4">
+            <label for="fecha_report" class="form-label">Fecha Reporte</label>
+            <input type="date" name="fecha_report" id="fecha_report" class="form-control"
+                   value="{{ request.GET.fecha_report }}">
+        </div>
+        <div class="col-md-4 d-flex align-items-end justify-content-between">
+            <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+            <a href="{% url 'asignar_servicio' %}" class="btn btn-success">Asignar Servicio</a>
+            <a href="{% url 'cerrar_servicio' %}" class="btn btn-warning">Cerrar Servicio</a>
+        </div>
+    </form>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th># Punto</th>
+            <th>Punto de Venta</th>
+            <th>Asignado Por</th>
+            <th>Técnico Resolución</th>
+            <th>Tipo de Falla</th>
+            <th>Fecha Asignación</th>
+            <th>Fecha Reporte</th>
+            <th>Estado</th>
+            <th>Descripción Falla</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for servicio in page_obj %}
+        <tr>
+            <td>{{ servicio.numero_punto }}</td>
+            <td>{{ servicio.punto_venta }}</td>
+            <td>{{ servicio.tecnico_asignado }}</td>
+            <td>{{ servicio.tecnico_resolucion }}</td>
+            <td>{{ servicio.tipo_falla }}</td>
+            <td>{{ servicio.fecha_asignacion }}</td>
+            <td>{{ servicio.fecha_report }}</td>
+            <td>
+                    <span class="badge {% if servicio.estado == 'Cerrado' %}bg-success{% else %}bg-warning{% endif %}">
+                        {{ servicio.estado }}
+                    </span>
+            </td>
+            <td>{{ servicio.descripcion }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="9" class="text-center">No hay servicios disponibles.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+
+            <ul class="pagination justify-content-center mb-0">
+                <ul>
+
+
+                </ul>
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?page={{ page_obj.previous_page_number }}{% if request.GET.numero_punto %}&numero_punto={{ request.GET.numero_punto }}{% endif %}{% if request.GET.fecha_report %}&fecha_report={{ request.GET.fecha_report }}{% endif %}">Anterior</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?page={{ page_obj.next_page_number }}{% if request.GET.numero_punto %}&numero_punto={{ request.GET.numero_punto }}{% endif %}{% if request.GET.fecha_report %}&fecha_report={{ request.GET.fecha_report }}{% endif %}">Siguiente</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+</div>
+{% endblock %}

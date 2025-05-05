@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Punto de Venta{% endblock %}
+{% block content %}
+<div class="card p-4">
+    <h2>¿Estás seguro que deseas eliminar el punto de venta "{{ punto.nombre }}"?</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'lista_puntos_venta' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

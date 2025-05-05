@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Puntos de Venta{% endblock %}
+{% block content %}
+<div class="card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <form method="get" class="d-flex">
+            <input type="text" name="numero_punto" placeholder="Filtrar por número" class="form-control me-2"
+                   value="{{ request.GET.numero_punto }}">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+
+        <div>
+            <a href="{% url 'crear_punto_venta' %}" class="btn btn-success me-2">Crear Nuevo</a>
+
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Modalidad</th>
+                <th>Zona</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for punto in page_obj %}
+            <tr>
+                <td>{{ punto.numero_punto }}</td>
+                <td>{{ punto.nombre }}</td>
+                <td>{{ punto.direccion }}</td>
+                <td>{{ punto.get_modalidad_display }}</td>
+                <td>{{ punto.zona }}</td>
+                <td>
+                    <a href="{% url 'editar_punto_venta' punto.id %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'eliminar_punto_venta' punto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">No hay puntos de venta registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.numero_punto %}&numero_punto={{ request.GET.numero_punto }}{% endif %}">Anterior</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+            {% endif %}
+
+            <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.numero_punto %}&numero_punto={{ request.GET.numero_punto }}{% endif %}">Siguiente</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

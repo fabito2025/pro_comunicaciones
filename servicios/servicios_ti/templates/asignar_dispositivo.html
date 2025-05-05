@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Asignar Dispositivo a Punto de Venta</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.dispositivo.label_tag }}
+                {{ form.dispositivo }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.punto_venta.label_tag }}
+                {{ form.punto_venta }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.fecha_instalacion.label_tag }}
+                {{ form.fecha_instalacion }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.nombre_responsable.label_tag }}
+                {{ form.nombre_responsable }}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.estado.label_tag }}
+                {{ form.estado }}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Asignar</button>
+        <a href="{% url 'dispositivos_asignados' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success mt-3">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">Dispositivos Asignados</h3>
+
+   <form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label for="punto_venta" class="form-label">Punto de Venta</label>
+        <select name="punto_venta" id="punto_venta" class="form-select">
+            <option value="">Todos</option>
+            {% for punto in puntos_venta %}
+                <option value="{{ punto.id }}" {% if request.GET.punto_venta|add:"" == punto.id|add:"" %}selected{% endif %}>
+                    {{ punto.numero_punto }} - {{ punto.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="tecnico" class="form-label">Técnico Responsable</label>
+        <select name="tecnico" id="tecnico" class="form-select">
+            <option value="">Todos</option>
+            {% for tecnico in tecnicos %}
+                <option value="{{ tecnico.id }}" {% if request.GET.tecnico|add:"" == tecnico.id|add:"" %}selected{% endif %}>
+                    {{ tecnico.nombre }} {{ tecnico.apellido }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end justify-content-between">
+        <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+        <a href="{% url 'asignar_dispositivo' %}" class="btn btn-success">Asignar dispositivo</a>
+
+    </div>
+</form>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Dispositivo</th>
+                <th>Serial</th>
+                <th>IMEI</th>
+                <th>Punto de Venta</th>
+                <th>Fecha Instalación</th>
+                <th>Responsable</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asignado in page_obj %}
+            <tr>
+                <td>{{ asignado.dispositivo.tipo }} {{ asignado.dispositivo.marca }} {{ asignado.dispositivo.modelo }}</td>
+                <td>{{ asignado.dispositivo.serial }}</td>
+                <td>{{ asignado.dispositivo.imei }}</td>
+                <td>{{ asignado.punto_venta.numero_punto }} - {{ asignado.punto_venta.nombre }}</td>
+                <td>{{ asignado.fecha_instalacion }}</td>
+                <td>{{ asignado.nombre_responsable.nombre }} {{ asignado.nombre_responsable.apellido }}</td>
+                <td>{{ asignado.estado }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center">No hay dispositivos asignados con los filtros seleccionados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación centrada -->
+    <div class="d-flex justify-content-center">
+        <nav>
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.punto_venta %}&punto_venta={{ request.GET.punto_venta }}{% endif %}{% if request.GET.tecnico %}&tecnico={{ request.GET.tecnico }}{% endif %}">Anterior</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.punto_venta %}&punto_venta={{ request.GET.punto_venta }}{% endif %}{% if request.GET.tecnico %}&tecnico={{ request.GET.tecnico }}{% endif %}">Siguiente</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+</div>
+{% endblock %}

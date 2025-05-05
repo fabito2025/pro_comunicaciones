@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Cerrar Servicio Técnico</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Asignación de Servicio:</label>
+            {{ form.asignacion_servicio }}
+        </div>
+        <div class="mb-3">
+            <label>Descripción de la Falla:</label>
+            {{ form.descripcion_falla }}
+        </div>
+        <div class="mb-3">
+            <label>Fecha de Resolución:</label>
+            {{ form.fecha_resolucion }}
+        </div>
+        <div class="mb-3">
+            <label>Técnico que resolvió:</label>
+            {{ form.tecnico_resolucion }}
+        </div>
+        <div class="mb-3">
+            <label>Estado:</label>
+            {{ form.estado }}
+        </div>
+        <button type="submit" class="btn btn-success">Cerrar Servicio</button>
+        <a href="{% url 'listar_servicios' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

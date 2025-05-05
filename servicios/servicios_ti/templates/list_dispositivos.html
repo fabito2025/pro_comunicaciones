@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Lista de Dispositivos</h2>
+
+    <!-- Filtro -->
+    <!-- Filtros -->
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <input type="text" name="serial" placeholder="Buscar por Serial" class="form-control" value="{{ serial }}">
+    </div>
+    <div class="col-md-3">
+        <input type="text" name="imei" placeholder="Buscar por IMEI" class="form-control" value="{{ imei }}">
+    </div>
+    <div class="col-md-3">
+        <select name="tipo" class="form-select">
+            <option value="">Todos los Tipos</option>
+            {% for t in tipos %}
+                <option value="{{ t }}" {% if t == tipo %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="estado" class="form-select">
+            <option value="">Todos los Estados</option>
+            {% for e in estados %}
+                <option value="{{ e }}" {% if e == estado %}selected{% endif %}>{{ e }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12 text-end">
+        <a href="{% url 'crear_dispositivo' %}" class="btn btn-success">Nuevo Dispositivo</a>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <a href="{% url 'lista_dispositivos' %}" class="btn btn-outline-secondary ms-2">Limpiar</a>
+    </div>
+</form>
+
+    <!-- Tabla -->
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Tipo</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Serial</th>
+                <th>Imei</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dispositivo in page_obj %}
+            <tr>
+                <td>{{ dispositivo.tipo }}</td>
+                <td>{{ dispositivo.marca }}</td>
+                <td>{{ dispositivo.modelo }}</td>
+                <td>{{ dispositivo.serial }}</td>
+                <td>{{ dispositivo.imei }}</td>
+                <td>{{ dispositivo.estado }}</td>
+                <td>
+                    <a href="{% url 'editar_dispositivo' dispositivo.id %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'eliminar_dispositivo' dispositivo.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No hay dispositivos encontrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Paginación -->
+    {% if page_obj.has_other_pages %}
+    <nav class="d-flex justify-content-center">
+
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&serial={{ serial }}&imei={{ imei }}">Anterior</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}&serial={{ serial }}&imei={{ imei }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&serial={{ serial }}&imei={{ imei }}">Siguiente</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+

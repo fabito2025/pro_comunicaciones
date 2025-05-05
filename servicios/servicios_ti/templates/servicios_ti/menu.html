@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú Principal | Servicios TI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        .list-group-item a {
+            text-decoration: none;
+            color: #0072ff;
+            font-weight: bold;
+        }
+        .list-group-item a:hover {
+            color: #0047b3;
+        }
+        .btn-danger {
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% block content %}{% endblock %}
+    <!-- Bootstrap JS para que funcionen los botones como 'btn-close' -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card text-center">
+                <h2 class="mb-4">Menú Servicios TI</h2>
+                <p class="mb-4">Bienvenido, <strong>{{ request.session.usuario_nombre }}</strong> <strong>{{
+                    request.session.usuario_rol }}</strong></p>
+
+                <ul class="list-group mb-4">
+                    {% if rol == 'administrador' %}
+                    <li class="list-group-item"><a href="{% url 'lista_usuarios' %}">Administrar Usuarios</a></li>
+                    <li class="list-group-item"><a href="{% url 'lista_zonas' %}">Gestión de Zonas</a></li>
+                    <li class="list-group-item"><a href="{% url 'lista_puntos_venta' %}">Gestión de Puntos</a>
+                    <li class="list-group-item"><a href="{% url 'lista_dispositivos' %}">Crear Dispositivo</a>
+
+                        {% endif %}
+                    <li class="list-group-item"><a href="{% url 'asignar_dispositivo' %}">Asignar Dispositivos</a></li>
+                    <li class="list-group-item"><a href="{% url 'dispositivos_asignados' %}">Dispositivos Asignados</a>
+                    <li class="list-group-item"><a href="{% url 'recolectar_inventario' %}">Recolectar Inventario</a></li>
+                    <li class="list-group-item"><a href="{% url 'lista_recolecciones' %}">Inventarios Recolectados</a></li>
+                    <li class="list-group-item"><a href="{% url 'asignar_servicio' %}">Asignar Servicios</a></li>
+                    <li class="list-group-item"><a href="{% url 'listar_servicios' %}">Lista de Servicios</a></li>
+                    <li class="list-group-item"><a href="{% url 'cerrar_servicio' %}">Cerrar Servicios</a></li>
+
+
+                </ul>
+
+                <a href="{% url 'logout' %}" class="btn btn-danger">Cerrar sesión</a>
+            </div>
+        </div>
+
+
+    </div>
+
+    {% if messages %}
+    <div class="container mt-2">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

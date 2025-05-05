@@ -1,0 +1,13 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>¿Eliminar Zona?</h2>
+    <p>¿Seguro que deseas eliminar la zona <strong>{{ zona.numero_zona }}</strong> administrada por {{ zona.nombre_admin_zona }} {{ zona.apellido_admin_zona }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'lista_zonas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

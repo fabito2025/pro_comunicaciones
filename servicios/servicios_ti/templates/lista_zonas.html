@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Zonas Registradas</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{% url 'crear_zona' %}" class="btn btn-success">Crear Nueva Zona</a>
+
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th># Zona</th>
+                <th>Administrador</th>
+                <th>Teléfono</th>
+                <th>Orientación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for zona in page_obj %}
+            <tr>
+                <td>{{ zona.numero_zona }}</td>
+                <td>{{ zona.nombre_admin_zona }} {{ zona.apellido_admin_zona }}</td>
+                <td>{{ zona.telefono }}</td>
+                <td>{{ zona.get_orientacion_display }}</td>
+                <td>
+                    <a href="{% url 'editar_zona' zona.id %}" class="btn btn-primary btn-sm">Editar</a>
+                    <a href="{% url 'eliminar_zona' zona.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No hay zonas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Controles de paginación -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
