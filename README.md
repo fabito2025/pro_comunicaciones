@@ -1,4 +1,4 @@
-##Fabio Diazgranados Martelo Proyecto de Grado
+##Fabio Diazgranados Martelo Proyecto de Grado 05-05-2025
 
 ## Instrucciones para levantar el proyecto
 
@@ -10,6 +10,8 @@ python -m venv env
 env\Scripts\activate
 
 2. Activar las dependencias
+
+cd servicios
 
 pip install -r requirements.txt
 
