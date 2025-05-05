@@ -37,7 +37,7 @@ def login_view(request):
                 messages.error(request, "Usuario o contraseña incorrectos.")
     else:
         form = LoginForm()
-    return render(request, 'servicios_ti/login.html', {'form': form})
+    return render(request, 'servicios_ti/index.html', {'form': form})
 
 def menu_view(request):
     if 'usuario_id' not in request.session:
