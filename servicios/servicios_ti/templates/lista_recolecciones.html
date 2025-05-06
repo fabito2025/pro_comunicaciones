@@ -19,8 +19,9 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="col-md-2 align-self-end">
+        <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="{% url 'recolectar_inventario' %}" class="btn btn-success mx-3">Recolectar inventario</a>
         </div>
     </form>
 
