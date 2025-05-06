@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -39,9 +40,9 @@
     <div class="row justify-content-center">
         <div class="col-md-7">
             <div class="card text-center">
-                <h2 class="mb-4">Menú Servicios TI</h2>
-                <p class="mb-4">Bienvenido, <strong>{{ request.session.usuario_nombre }}</strong> <strong>{{
-                    request.session.usuario_rol }}</strong></p>
+                <h2 class="mb-4"><img src="{% static 'img/logo2.png' %}" alt="Logo Empresa" style="height: 40px; margin-right: 10px;">Menú Servicios TI</h2>
+                <p class="mb-4"><strong>Bienvenido,</strong> <strong>{{ request.session.usuario_nombre }}</strong>
+                    <strong>({{ request.session.usuario_rol }})</strong></p>
 
                 <ul class="list-group mb-4">
                     {% if rol == 'administrador' %}

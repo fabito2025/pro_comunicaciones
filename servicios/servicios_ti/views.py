@@ -364,6 +364,7 @@ def listar_servicios_estado(request):
 
         item = {
             'numero_punto': asignacion.punto_venta.numero_punto,
+            'id': asignacion.id,
             'punto_venta': asignacion.punto_venta.nombre,
             'tecnico_asignado': f"{asignacion.tecnico}",
             'tipo_falla': asignacion.tipo_falla,

@@ -25,6 +25,7 @@
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th>Numero servicio</th>
             <th># Punto</th>
             <th>Punto de Venta</th>
             <th>Asignado Por</th>
@@ -39,6 +40,7 @@
         <tbody>
         {% for servicio in page_obj %}
         <tr>
+            <td>{{servicio.id}}</td>
             <td>{{ servicio.numero_punto }}</td>
             <td>{{ servicio.punto_venta }}</td>
             <td>{{ servicio.tecnico_asignado }}</td>
