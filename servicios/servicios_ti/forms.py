@@ -1,15 +1,18 @@
 from django import forms
-
+from .models import RecolectoInventario
+from .models import AsignacionServicio
+from .models import DispositivoPunto
+from .models import Dispositivo
+from .models import Usuario, ReporteFalla
+from .models import Zona
+from .models import PuntoVenta
+#----------------------------------------------------------------------------------------------------------
 class LoginForm(forms.Form):
     nombre_usuario = forms.CharField(label='Nombre de Usuario', max_length=100, widget=forms.TextInput(attrs={'class': 'form-control'}))
     password_usuario = forms.CharField(label='Contraseña', max_length=20, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 #-------------------------------------------------------------------------------------------------------------------------------------------
 
 #creacion usuario
-
-from django import forms
-from .models import Usuario
-
 class UsuarioForm(forms.ModelForm):
     class Meta:
         model = Usuario
@@ -24,10 +27,6 @@ class UsuarioForm(forms.ModelForm):
 
 #-----------------------------------------------------------------------------------------------------------
 #creacion de zona
-
-from django import forms
-from .models import Zona
-
 class ZonaForm(forms.ModelForm):
     class Meta:
         model = Zona
@@ -41,10 +40,6 @@ class ZonaForm(forms.ModelForm):
         }
 #--------------------------------------------------------------------------------------------------------------
 # Dispositivos
-
-from django import forms
-from .models import Dispositivo
-
 class DispositivoForm(forms.ModelForm):
     class Meta:
         model = Dispositivo
@@ -62,9 +57,6 @@ class DispositivoForm(forms.ModelForm):
         }
 #-----------------------------------------------------------------------------------------------------------
 #punto de venta
-from django import forms
-from .models import PuntoVenta
-
 class PuntoVentaForm(forms.ModelForm):
     class Meta:
         model = PuntoVenta
@@ -76,10 +68,6 @@ class PuntoVentaForm(forms.ModelForm):
 
 #------------------------------------------------------------------------------------------------------------
 #Asignacinacion de dispositivo
-
-from django import forms
-from .models import DispositivoPunto
-
 class DispositivoPuntoForm(forms.ModelForm):
     class Meta:
         model = DispositivoPunto
@@ -91,48 +79,70 @@ class DispositivoPuntoForm(forms.ModelForm):
             'nombre_responsable': forms.Select(attrs={'class': 'form-select'}),
             'estado': forms.Select(attrs={'class': 'form-select'}),
         }
-#-----------------------------------------------------------------------------------------------------------------
-#Aignacion:de servicios
-from django import forms
-from .models import AsignacionServicio
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        dispositivos_asignados = DispositivoPunto.objects.values_list('dispositivo_id', flat=True)
+        self.fields['dispositivo'].queryset = Dispositivo.objects.exclude(id__in=dispositivos_asignados)
+        self.fields['punto_venta'].label_from_instance = lambda \
+            obj: f"{obj.numero_punto} - {obj.nombre} - {obj.direccion}"
+
+
+#-----------------------------------------------------------------------------------------------------------------
+#Asignacion:de servicios
 class AsignacionServicioForm(forms.ModelForm):
+    punto_venta = forms.ModelChoiceField(
+        queryset=PuntoVenta.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Punto de Venta',
+        empty_label="Seleccione un punto",
+    )
+
     class Meta:
         model = AsignacionServicio
         fields = '__all__'
         widgets = {
-            'punto_venta': forms.Select(attrs={'class': 'form-select'}),
             'tecnico': forms.Select(attrs={'class': 'form-select'}),
             'tipo_falla': forms.Select(attrs={'class': 'form-select'}),
             'telefono': forms.TextInput(attrs={'class': 'form-control'}),
-            'fecha_asignacion': forms.DateInput(attrs={
-                'class': 'form-control',
-                'type': 'date'
-            }),
+            'fecha_asignacion': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'estado': forms.Select(attrs={'class': 'form-select'}),
         }
-#Reporte o cierre del servicio
-from django import forms
-from .models import ReporteFalla
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Cambiar las etiquetas visibles del campo punto_venta
+        self.fields['punto_venta'].label_from_instance = lambda obj: f"{obj.numero_punto} - {obj.nombre} - {obj.direccion}"
+#--------------------------------------------------------------------------------------------------------
+#Reporte o cierre del servicio
 class ReporteFallaForm(forms.ModelForm):
+    asignacion_servicio = forms.ModelChoiceField(
+        queryset=AsignacionServicio.objects.filter(estado='pendiente'),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label="Asignación de Servicio",
+        empty_label="Seleccione una asignación",
+    )
+
     class Meta:
         model = ReporteFalla
         fields = ['asignacion_servicio', 'descripcion_falla', 'fecha_resolucion', 'tecnico_resolucion', 'estado']
         widgets = {
             'descripcion_falla': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'fecha_resolucion': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'asignacion_servicio': forms.Select(attrs={'class': 'form-select'}),
             'tecnico_resolucion': forms.Select(attrs={'class': 'form-select'}),
             'estado': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['asignacion_servicio'].label_from_instance = lambda obj: (
+            f"N# {obj.id} | {obj.punto_venta.numero_punto} - {obj.punto_venta.nombre} - {obj.punto_venta.direccion} | "
+            f"{obj.tecnico} - {obj.tipo_falla} - {obj.fecha_asignacion} - {obj.estado}"
+        )
 #-------------------------------------------------------------------------------------------------------------------
 #recolectar inventario
-
-from django import forms
-from .models import RecolectoInventario
-
 class RecolectoInventarioForm(forms.ModelForm):
+
     class Meta:
         model = RecolectoInventario
         fields = ['empleadotic', 'punto_venta', 'tipo_dispositivo', 'serial', 'imei', 'numerosimcard', 'operador']
@@ -146,3 +156,7 @@ class RecolectoInventarioForm(forms.ModelForm):
             'operador': forms.Select(attrs={'class': 'form-select'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Cambiar las etiquetas visibles del campo punto_venta
+        self.fields['punto_venta'].label_from_instance = lambda obj: f"{obj.numero_punto} - {obj.nombre} - {obj.direccion}"

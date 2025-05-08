@@ -1,4 +1,3 @@
-
 from .forms import LoginForm
 from django.contrib.auth import logout as auth_logout
 from .forms import UsuarioForm
@@ -196,7 +195,6 @@ def lista_dispositivos(request):
         'estado': estado or ''
     })
 
-
 #-------------------------------------------------------------------------------------------------------------
 def crear_dispositivo(request):
     if 'usuario_id' not in request.session:
@@ -344,6 +342,8 @@ def cerrar_servicio(request):
     else:
         form = ReporteFallaForm()
     return render(request, 'cerrar_servicio.html', {'form': form})
+
+
 #-------------------------------------------------------------------------------------------------------------------
 #Mostrar servicios
 def listar_servicios_estado(request):
@@ -441,8 +441,6 @@ def dispositivos_asignados(request):
     # Filtros
     punto_venta_id= request.GET.get('punto_venta') or ''
     tecnico_id  = request.GET.get('tecnico') or ''
-    # punto_venta_id = request.GET.get('punto_venta')
-    # tecnico_id = request.GET.get('tecnico')
 
     if punto_venta_id:
         dispositivos_asignados = dispositivos_asignados.filter(punto_venta__id=punto_venta_id)

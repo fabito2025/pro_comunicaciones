@@ -114,7 +114,6 @@ class DispositivoPunto(models.Model):
 class AsignacionServicio(models.Model):
     ESTADO = [
         ('pendiente', 'Pendiente'),
-        ('en_proceso', 'En Proceso'),
         ('finalizado', 'Finalizado'),
     ]
 
@@ -139,7 +138,7 @@ class AsignacionServicio(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO, default='pendiente')
 
     def __str__(self):
-        return f"Asignación a {self.tecnico} para {self.punto_venta} {self.tipo_falla} estado: {self.estado}"
+        return f"N#: {self.id} Asignación: {self.tecnico} para {self.punto_venta} {self.tipo_falla} estado: {self.estado}"
 
 
 

@@ -29,9 +29,11 @@
         </select>
     </div>
     <div class="col-12 text-end">
-        <a href="{% url 'crear_dispositivo' %}" class="btn btn-success">Nuevo Dispositivo</a>
-        <button type="submit" class="btn btn-primary">Filtrar</button>
-        <a href="{% url 'lista_dispositivos' %}" class="btn btn-outline-secondary ms-2">Limpiar</a>
+        <a href="{% url 'asignar_dispositivo' %}" class="btn btn-warning ms-1">Asignar</a>
+        <a href="{% url 'crear_dispositivo' %}" class="btn btn-success ms-1">Nuevo</a>
+        <a href="{% url 'lista_dispositivos' %}" class="btn btn-secondary ms-1">Limpiar</a>
+        <button type="submit" class="btn btn-primary ms-1">Filtrar</button>
+
     </div>
 </form>
 
@@ -56,7 +58,11 @@
                 <td>{{ dispositivo.modelo }}</td>
                 <td>{{ dispositivo.serial }}</td>
                 <td>{{ dispositivo.imei }}</td>
-                <td>{{ dispositivo.estado }}</td>
+                <td>
+                <span class="badge {% if dispositivo.estado == 'ASIGNADO' %}bg-success{% else %}bg-info{% endif %}">
+                        {{ dispositivo.estado }}
+                </span>
+                </td>
                 <td>
                     <a href="{% url 'editar_dispositivo' dispositivo.id %}" class="btn btn-warning btn-sm">Editar</a>
                     <a href="{% url 'eliminar_dispositivo' dispositivo.id %}" class="btn btn-danger btn-sm">Eliminar</a>

@@ -7,7 +7,7 @@
     </content>
     <content url="file://$MODULE_DIR$/.venv/Lib" />
     <content url="file://$MODULE_DIR$/.venv/Scripts" />
-    <orderEntry type="jdk" jdkName="Python 3.13 (pro_comunicaciones)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.13 virtualenv at C:\pro_comunicaciones\env" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
